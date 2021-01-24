@@ -88,7 +88,8 @@
 								<li v-for="(item, index) in itemsList" :key="index" @click="showItemDetail(item.itemId)">
 									<div class="i-pic limit">
 										<img :src="item.imgUrl" />
-										<p class="title fl">{{item.itemName}}</p>
+										<!--<p class="title fl">{{item.itemName}}</p>-->
+										<p class="title fl" v-html="item.itemName"></p>
 										<p class="price fl">
 											<b>¥</b>
 											<strong>{{item.price / 100}}</strong>
@@ -355,7 +356,12 @@
 					// debugger;
 					var serverUrl = app.serverUrl;
 					axios.defaults.withCredentials = true;
-					axios.get(serverUrl + '/items/search?keywords=' + keywords + "&sort=" + sort + "&page=" + page + "&pageSize=" + pageSize, {})
+
+					// 非ES请求地址
+					// var searchRealUrl = serverUrl + '/items/search?keywords=' + keywords + "&sort=" + sort + "&page=" + page + "&pageSize=" + pageSize;
+					// ES请求地址
+					var searchRealUrl = 'http://localhost:8033/items/es/search?keywords=' + keywords + "&sort=" + sort + "&page=" + page + "&pageSize=" + pageSize;
+					axios.get(searchRealUrl, {})
 						.then(res => {
 							if (res.data.status == 200) {
 								var grid = res.data.data;
