@@ -441,7 +441,8 @@
 				city: '北京',
 				district: '东城区',
 				cityArr: [],
-				districtArr: []
+				districtArr: [],
+				token: ""
 			},
 
 			watch: {
@@ -476,6 +477,9 @@
 
 				// 渲染地址信息
 				this.renderUserAddressList();
+
+				// 获取orderToken
+				this.getOrderToken();
 			},
 			methods: {
 				goUserCenter() {
@@ -533,6 +537,7 @@
 					var orderRemarker = this.orderRemarker;
 					// console.log(orderRemarker);
 
+					var token = this.token;
 					var userInfo = this.userInfo;
 					var serverUrl = app.serverUrl;
 					axios.defaults.withCredentials = true;
@@ -544,6 +549,7 @@
 								"addressId": choosedAddressId,
 								"payMethod": choosedPayMethod,
 								"leftMsg": orderRemarker,
+								"token": token,
 							},
 							{
 								headers: {
@@ -840,6 +846,18 @@
 					this.updatedAddressId = "";
 					this.flushAddressForm();
 				},
+                getOrderToken() {
+                    var serverUrl = app.serverUrl;
+                    axios.defaults.withCredentials = true;
+                    axios.post(serverUrl + '/orders/getOrderToken')
+                        .then(res => {
+                            if (res.data.status == 200) {
+								this.token = res.data.data;
+                            } else {
+                                alert("orderToken获取失败");
+                            }
+                        });
+                },
 				renderUserAddressList() {
 					var userInfo = this.userInfo;
 					// 请求后端获得最新数据
